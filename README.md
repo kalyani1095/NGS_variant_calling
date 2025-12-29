@@ -23,26 +23,26 @@ Make sure that the versions are the latest available versions at the time. I wil
 
   You should have a reference genome to proceed with the variant calling.So let's see the process of downloding a reference genome. Go to the NCBI website select SRA database and your preferred organism and select any SRR number of your choice. 
 
-  ![Navigating NCBI website](imgs/scr1.png)
+  ![Navigating NCBI website](images/scr1.png)
 
 
   You will reach this page
 
-  ![Finding SRR number](imgs/srr number.png)
+  ![Finding SRR number](images/srrnumber.png)
 
   In the above screenshot you can see a heading 'Sample' and below it you can find 'Organism : Mycobacterium tuberculosis'. Click on the name of the organism and it will take you to another page. There you can see a black menu bar on the top.On it there is a 'Genome' button.
 
-![Downloading reference genome](imgs/get ref genome.png)
+![Downloading reference genome](images/getrefgenome.png)
 
 You will reach this page.
-![Downloading reference genome](imgs/get ref genome2.png)
+![Downloading reference genome](images/getrefgenome2.png)
 Mostly you will have to give the name of your chosen organism again on the search bar to load this page with the list. Click on the organism name under the 'Scientific name' coloumn. You will be taken to another page
 
-![Downloading reference Genome](imgs/get ref genome 4.png)
+![Downloading reference Genome](images/getrefgenome4.png)
 
  Scroll down to the bottom of the page and you will see a download button.Click on the download button and you will see a list with checkboxes. Select the following and click download at the bottom of the page.You may have to scroll a little more to reach the bottom.That is why the download is not seen in my screeshot.
 
- ![Downloading reference Genome](imgs/get ref genome5.png)
+ ![Downloading reference Genome](images/getrefgenome5.png)
 
  Thus you have your reference genome.
 
@@ -50,24 +50,24 @@ Mostly you will have to give the name of your chosen organism again on the searc
 
 First step is to select an organism you desire to work with. It can be any organism of your choice. I have chosen Mycobacterium tuberculosis,the bacterium which causes TB.Then you need to find a sample genome for the organism. There are many sample genomes available for the same organism in the NCBI website's SRA database
 
-![Navigating NCBI website](imgs/scr1.png)
+![Navigating NCBI website](images/scr1.png)
 
 You can select any sample from the numerous samples shown. Click on any one of the samples. when you go inside,you will see what's called an SRR number
-![Finding SRR number](imgs/srr number.png)
+![Finding SRR number](images/srrnumber.png)
 
 
 This is the SRR number I used for my project,so I showed the same here.You are free to choose any other sample data and therefore a different SRR number. Copy the SRR number  and using terminal download the SRA file. I did all my following terminal operations in ubuntu for windows. 
 
-![Downloading sra file using prefetch command](imgs/sra file download.png)
+![Downloading sra file using prefetch command](images/srafiledownload.png)
 
  I had forgotten to take the screenshot of the prefetch command during my project. So for attaching here,I used another SRR number to download SRA file and took a screenshot.
 You will notice a folder created in the name of the SRR number and when you go inside the folder you will find an SRA file created. Now,you cannot work with an SRA file. So it should be converted to a FASTQ file. You can do it through the sratoolkit itself. 
 
-![Converting SRA file to a FASTQ file](imgs/fastq file download SRR30031098.png)
+![Converting SRA file to a FASTQ file](images/fastqfiledownloadSRR30031098.png)
 
 Here we got only one fastq file. Most samples have paired reads i.e there will be sequences of both the strands of the DNA,5'-3' and 3'-5'. So we can split the fastq file into 2. 
 
-![splitting the fastq file](imgs/fastq split SRR30031098.png)
+![splitting the fastq file](images/fastqsplitSRR30031098.png)
 --split-3 actually creates two fastq files. A third file if generated will be of low quality and can be eliminated. For me only two files were generated,SRR30031098_1 and SRR30031098_2. The two files which are created will be of only high quality reads. 
 Then you need to generate a FastQC report using FastQC tool. You don't need to use terminal to run FastQC tool. You can directly give the fastq file,one at a time,via the GUI. Once the FastQC report is generated,you can decide about trimming.If your FastQC report is good without yellow peaks below the faint red line and most other parameters are good with green tick marks,you can probably skip trimming. Usually when the fastq sequences are trimmed,it trims whatever comes below the faint red line on the yellow bars. For me there were no peaks on the yellow bars below the red line, the adaptor sequence content graph also had no peaks and was a line parallel to x-axis,close to the x axis. So I had skipped the trimming step. 
 Once the trimming is finished or you decide against trimming, you can move on to the next step which is Sequence Alignment Mapping. 
@@ -89,19 +89,19 @@ Before running BWA you need to take care of a few things.
 
 The indexing command is 
 
-![BWA indexing](imgs/Screenshot sam file creation_indexing.png)
+![BWA indexing](images/Screenshotsamfilecreationindexing.png)
 
 If we don't run an indexing command,it will throw an error .The BWA command for alignment would be
 
-![BWA command](imgs/screenshot bwa command.png)
+![BWA command](images/screenshotbwacommand.png)
 This command would be fine if you are using BCFTools.But if you are using GATK,this command would not be sufficient. GATK requires headers and IDs for the sam file.Else when you try to convert the sam file to bam file GATK will throw an error,'headers not found'. I have added the GATK shell scripting commands as a separate file.
 Next step is to convert the sam file to a bam file using Samtools. The linux command would be 
 
-![Coverting sam file to bam file](imgs/convert sam to bam.png)
+![Coverting sam file to bam file](images/convertsamtobam.png)
 
 After creating a bam file,we need to sort it. Sorted BAM file has data sorted by chromosomes,contigs etc  with respect to the reference genome.Its easier to access sorted data.Sorted data is slightly more compact and helps to remove low quality reads. Here is the linux command
 
-![sorting bam file](imgs/sorting bam file.png)
+![sorting bam file](images/sortingbamfile.png)
 
 Once you have the sorted bam file you can head to variant calling. If you are using BCF tools, you can execute the following commands and perform variant calling
 
@@ -130,11 +130,11 @@ Once you filter the variants we can separate the variants which have passed the 
 
   Mykrobe is a tool which can predict antibiotic resistance. Mykrobe accepts FASTA,FASTQ,sam,bam files as inputs. So at any point in this variant calling,you can use Mykrobe for antibiotic resistance prediction,which I had done during my NGS variant calling. I used bam file as input and the output can be saved as screenshot. JSON file can be difficult to read when opened in MS word or Notepad.
 
-![](imgs/mykrobe_resistance screenshot.png)
+![](images/mykroberesistancescreenshot.png)
 
-![](imgs/mykrobe_resistance screenshot2.png)
+![](images/mykroberesistancescreenshot2.png)
 
-![](imgs/mykrobe_resistance screenshot3.png)
+![](images/mykroberesistancescreenshot3.png)
 
 ​	
 
