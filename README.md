@@ -93,7 +93,7 @@ The indexing command is
 
 If we don't run an indexing command,it will throw an error .The BWA command for alignment would be
 
-![BWA command](images/screenshotbwacommand.png)
+![BWA command](images/Screenshotbwacommand.png)
 This command would be fine if you are using BCFTools.But if you are using GATK,this command would not be sufficient. GATK requires headers and IDs for the sam file.Else when you try to convert the sam file to bam file GATK will throw an error,'headers not found'. I have added the GATK shell scripting commands as a separate file.
 Next step is to convert the sam file to a bam file using Samtools. The linux command would be 
 
